@@ -1,0 +1,23 @@
+buildEnergyModel <- function(data){
+  num <- nchar(data$Sequence[1])
+
+  data %>%
+    mutate(ByteCode = SeqToByte(Sequence)) %>%
+    select(Energy, ByteCode) %>%
+    tidyr::separate(ByteCode,
+                    into=paste0(rep(1:num, each=3), c("CG", "CA", "CT")),
+                    convert = TRUE) %>%
+    lm(Energy ~ .-Energy, data = .) %>%
+    return()
+
+}
+
+predictEnergy <- function(sequences, model) {
+  num <- (model$rank-1)/3
+
+  tibble(ByteCode = SeqToByte(sequences)) %>%
+    tidyr::separate(ByteCode,
+                    into=paste0(rep(1:num, each=3), c("CG", "CA", "CT")),
+                    convert = TRUE) %>%
+    predict.lm(model, newdata=., type="response")
+}
