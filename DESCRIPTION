@@ -1,11 +1,17 @@
 Package: TFCookbook
 Type: Package
 Title: Analysing protein-DNA interactions data in principled way
-Version: 0.1.0
+Version: 2.0
 Author: Zheng Zuo
 Maintainer: Zheng Zuo <zeropinzuo@gmail.com>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: This package is currently developed and maintained by Zheng Zuo, and accompanied by online resourse book TFCookbook.com for analysis of protein-DNA interactions data.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
+Imports:
+    dplyr,
+    purrr,
+    tidyr
+Suggests:
+    ggplot2,
+    ggseqlogo
