@@ -1,6 +1,6 @@
 Package: TFCookbook
 Type: Package
-Title: Analysing protein-DNA interactions data in principled way
+Title: Analyzing protein-DNA interactions data in principled way
 Version: 2.0
 Author: Zheng Zuo
 Maintainer: Zheng Zuo <zeropinzuo@gmail.com>
