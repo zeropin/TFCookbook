@@ -48,14 +48,29 @@ getEnergyMatrix <- function(model) {
   return(energyMatrix)
 }
 
-getCoeffs <- function(matrix) {
-  coeff <- array(0L, dim = 3 * ncol(matrix))
-  names(coeff) <- paste0(rep(1:ncol(matrix), each = 3), c("CG", "CA", "CT"))
+toEnergyMatrix <- function(PFM){
+  num <- dim(PFM)[2]
+  
+  ## If some position equals to zero, add pseudocount for calculation.
+  PFM[PFM==0] <- 1
+  
+  energyMatrix <- matrix(0L, nrow=4, ncol=num, dimnames = list(c("A", "C", "G", "T")))
 
-  for (i in 1:ncol(matrix)) {
-    coeff[paste0(i, "CG")] <- matrix["G", i] - matrix["C", i]
-    coeff[paste0(i, "CA")] <- matrix["A", i] - matrix["C", i]
-    coeff[paste0(i, "CT")] <- matrix["T", i] - matrix["C", i]
+  for (i in 1:num){
+    energyMatrix[,i] <- log(sum(PFM[,i])/PFM[,i] -1)
+    energyMatrix[,i] <- energyMatrix[,i]-0.25*sum(energyMatrix[,i])
+  }
+  return(energyMatrix)
+}
+
+toCoeffs <- function(energyMatrix) {
+  coeff <- array(0L, dim = 3 * ncol(energyMatrix))
+  names(coeff) <- paste0(rep(1:ncol(energyMatrix), each = 3), c("CG", "CA", "CT"))
+
+  for (i in 1:ncol(energyMatrix)) {
+    coeff[paste0(i, "CG")] <- energyMatrix["G", i] - energyMatrix["C", i]
+    coeff[paste0(i, "CA")] <- energyMatrix["A", i] - energyMatrix["C", i]
+    coeff[paste0(i, "CT")] <- energyMatrix["T", i] - energyMatrix["C", i]
   }
 
   return(coeff)
