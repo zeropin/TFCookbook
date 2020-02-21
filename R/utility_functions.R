@@ -18,8 +18,8 @@ highlightMismatch<- function(sequences, reference){
 }
 
 SeqToByte <- function(sequences,
-                      Bases=cbind('A', 'C', "G", "T"),
-                      Codes=cbind("0 1 0 ", "0 0 0 ", "1 0 0 ", "0 0 1 ") ){
+                      Bases=cbind('A', 'C', "G", "T", "N"),
+                      Codes=cbind("0 1 0 ", "0 0 0 ", "1 0 0 ", "0 0 1 ", "0.25 0.25 0.25 ") ){
   seqs = strsplit(sequences, "")
 
   purrr::map_chr(seqs,
@@ -76,25 +76,43 @@ toCoeffs <- function(energyMatrix) {
   return(coeff)
 }
 
-plotEnergyLogo <- function(energyMatrix) {
-  ggplot2::ggplot() +
-    ggseqlogo::geom_logo(-energyMatrix, method = "custom", seq_type = "dna") +
-    ggseqlogo::theme_logo() +
-    ggplot2::xlab("Position") +
-    ggplot2::ylab("-Energy (kT)") %>%
-    return()
+reverseComplement <- function(energyMatrix){
+  reverseMatrix <- matrix(0L,
+              nrow = 4, ncol = dim(energyMatrix)[2], byrow = TRUE,
+              dimnames = list(c("A", "C", "G", "T")))
+              
+  reverseMatrix["A", ] <- rev(energyMatrix["T",])
+  reverseMatrix["C", ] <- rev(energyMatrix["G",])
+  reverseMatrix["G", ] <- rev(energyMatrix["C",])
+  reverseMatrix["T", ] <- rev(energyMatrix["A",])
+  
+  return(reverseMatrix)
 }
 
-anchorMatrix <- function(anchor, upstream=0,downstream=0){
-  m <- matrix(0L, nrow=4, ncol=upstream+nchar(anchor)+downstream, byrow=TRUE,
-              dimnames=list(c("A" ,"C" ,"G" , "T")))
 
-  m["A",upstream + which(strsplit(anchor,"")[[1]]=="A")] = 1
-  m["C",upstream + which(strsplit(anchor,"")[[1]]=="C")] = 1
-  m["G",upstream + which(strsplit(anchor,"")[[1]]=="G")] = 1
-  m["T",upstream + which(strsplit(anchor,"")[[1]]=="T")] = 1
+anchorMatrix <- function(anchor, upstream = 0, downstream = 0) {
+  m <- matrix(0L,
+    nrow = 4, ncol = upstream + nchar(anchor) + downstream, byrow = TRUE,
+    dimnames = list(c("A", "C", "G", "T"))
+  )
+
+  m["A", upstream + which(strsplit(anchor, "")[[1]] == "A")] <- 1
+  m["C", upstream + which(strsplit(anchor, "")[[1]] == "C")] <- 1
+  m["G", upstream + which(strsplit(anchor, "")[[1]] == "G")] <- 1
+  m["T", upstream + which(strsplit(anchor, "")[[1]] == "T")] <- 1
 
   return(m)
+}
+
+addAnchorSite <- function(energyMatrix, anchor, position=1, height=0.2) {
+  energyMatrix[c("A","C","G","T"), position:(position+nchar(anchor)-1)] <- 0
+  
+  energyMatrix["A", position - 1 + which(strsplit(anchor, "")[[1]] == "A")] <- -height
+  energyMatrix["C", position - 1 + which(strsplit(anchor, "")[[1]] == "C")] <- -height
+  energyMatrix["G", position - 1 + which(strsplit(anchor, "")[[1]] == "G")] <- -height
+  energyMatrix["T", position - 1 + which(strsplit(anchor, "")[[1]] == "T")] <- -height
+  
+  return(energyMatrix)
 }
 
 kmer <- function(k){
@@ -105,4 +123,8 @@ kmer <- function(k){
                   cbind(rep("A", 4^(k-1)), rep("C", 4^(k-1)), rep("G", 4^(k-1)), rep("T", 4^(k-1))
                   )))
   )
+}
+
+selectVariants <- function(data, reference, maxMismatches = 1) {
+  return(dplyr::filter(data, countMismatch(Sequence, reference) <= maxMismatches))
 }
