@@ -30,24 +30,6 @@ SeqToByte <- function(sequences,
   )
 }
 
-getEnergyMatrix <- function(model) {
-  coeff <- model$coefficients
-  num <- (length(model$coefficients) - 1) / 3
-
-  energyMatrix <- matrix(nrow = 4, ncol = num, dimnames = list(c("A", "C", "G", "T")))
-
-  for (i in 1:num) {
-    energyMatrix["C", i] <- 0
-    energyMatrix["G", i] <- coeff[paste0("`", i, "CG`")]
-    energyMatrix["A", i] <- coeff[paste0("`", i, "CA`")]
-    energyMatrix["T", i] <- coeff[paste0("`", i, "CT`")]
-
-    energyMatrix[, i] <- energyMatrix[, i] - 0.25 * sum(energyMatrix[, i])
-  }
-
-  return(energyMatrix)
-}
-
 
 toCoeffs <- function(energyMatrix) {
   coeff <- array(0L, dim = 3 * ncol(energyMatrix))
