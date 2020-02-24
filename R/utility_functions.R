@@ -63,8 +63,6 @@ toCoeffs <- function(energyMatrix) {
 }
 
 
-
-
 kmer <- function(k){
   if(k==1)
     return(c("A", "C", "G", "T"))
