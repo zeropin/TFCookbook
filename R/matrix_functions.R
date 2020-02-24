@@ -12,14 +12,30 @@ anchorMatrix <- function(anchor, upstream = 0, downstream = 0) {
   return(m)
 }
 
-addAnchorSite <- function(energyMatrix, anchor, position=1, height=0.2) {
+addAnchorMatrix <- function(energyMatrix, anchor, position=1, height=0.2) {
   energyMatrix[c("A","C","G","T"), position:(position+nchar(anchor)-1)] <- 0
   
   energyMatrix["A", position - 1 + which(strsplit(anchor, "")[[1]] == "A")] <- -height
   energyMatrix["C", position - 1 + which(strsplit(anchor, "")[[1]] == "C")] <- -height
   energyMatrix["G", position - 1 + which(strsplit(anchor, "")[[1]] == "G")] <- -height
   energyMatrix["T", position - 1 + which(strsplit(anchor, "")[[1]] == "T")] <- -height
+
+  energyMatrix["A", position - 1 + which(strsplit(anchor, "")[[1]] == "M")] <- -height*0.5
+  energyMatrix["C", position - 1 + which(strsplit(anchor, "")[[1]] == "M")] <- -height*0.5
   
+  energyMatrix["T", position - 1 + which(strsplit(anchor, "")[[1]] == "K")] <- -height*0.5
+  energyMatrix["G", position - 1 + which(strsplit(anchor, "")[[1]] == "K")] <- -height*0.5
+ 
+  energyMatrix["A", position - 1 + which(strsplit(anchor, "")[[1]] == "R")] <- -height*0.5
+  energyMatrix["G", position - 1 + which(strsplit(anchor, "")[[1]] == "R")] <- -height*0.5
+  
+  energyMatrix["T", position - 1 + which(strsplit(anchor, "")[[1]] == "Y")] <- -height*0.5
+  energyMatrix["C", position - 1 + which(strsplit(anchor, "")[[1]] == "Y")] <- -height*0.5
+  
+  energyMatrix["A", position - 1 + which(strsplit(anchor, "")[[1]] == "N")] <- -height*0.25
+  energyMatrix["G", position - 1 + which(strsplit(anchor, "")[[1]] == "N")] <- -height*0.25
+  energyMatrix["T", position - 1 + which(strsplit(anchor, "")[[1]] == "N")] <- -height*0.25
+  energyMatrix["C", position - 1 + which(strsplit(anchor, "")[[1]] == "N")] <- -height*0.25
   return(energyMatrix)
 }
 
