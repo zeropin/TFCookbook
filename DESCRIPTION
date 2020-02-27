@@ -15,3 +15,4 @@ Imports:
 Suggests:
     ggplot2,
     ggseqlogo
+RoxygenNote: 7.0.2
