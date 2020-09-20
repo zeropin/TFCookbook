@@ -1,39 +1,3 @@
-#' Count the number of mismatches of sequence(s) to some reference site
-#' 
-#' @param sequences List of sequences.
-#' @param reference Reference sequence.
-#' @return The number of mismatches between \code{sequences} and \code{reference}.
-#' @examples
-#' countMismatch("GTAC", "GAAC")
-#' countMismatch(c("GTAC", "GAAC"), "GAAC")
-countMismatch <- function(sequences, reference){
-  seqs = strsplit(sequences, "")
-  ref  = strsplit(reference, "")[[1]]
-
-  purrr::map_int(seqs,
-                 function(seq) {sum(seq!=ref, na.rm=TRUE)})
-}
-
-
-#' Highlight the mismatches of sequence(s) to some reference site with '-'
-#' 
-#' @param sequences List of sequences.
-#' @param reference Reference sequence.
-#' @return Sequences with those mismatched portions to reference changed to '-'
-#' @examples
-#' highlightMismatch("GTAC", "GAAC")
-#' highlightMismatch(c("GTAC", "GAAC"), "GAAC")
-highlightMismatch<- function(sequences, reference){
-  seqs = strsplit(sequences, "")
-  ref  = strsplit(reference, "")[[1]]
-
-  purrr::map_chr(seqs,
-                 function(seq){
-                   seq[seq==ref] <- '-'
-                   stringr::str_c(seq,collapse = "")
-                 })
-}
-
 #' Convert nucleotide sequence to binary code based on Bases->Codes correspondence
 #' 
 #' @param sequences List of sequences.
@@ -45,11 +9,20 @@ highlightMismatch<- function(sequences, reference){
 #' SeqToByte("GTAAN",
 #' Bases=cbind('A', 'C', "G", "T", "N"),
 #' Codes=cbind("0 1 0 ", "0 0 0 ", "1 0 0 ", "0 0 1 ", "0.25 0.25 0.25 "))
-SeqToByte <- function(sequences,
-                      Bases=cbind('A', 'C', "G", "T", "N"),
-                      Codes=cbind("0 1 0 ", "0 0 0 ", "1 0 0 ", "0 0 1 ", "0.25 0.25 0.25 ") ){
+SeqToByte <- function(sequences, encoding = "3L+1"){
   seqs = strsplit(sequences, "")
 
+  if(encoding == "3L+1"){
+    Bases=cbind('A', 'C', "G", "T", "N", "-")
+    Codes=cbind("0 1 0 ", "0 0 0 ", "1 0 0 ", "0 0 1 ", "0.25 0.25 0.25 ", "0 0 0 ")}
+  else if(encoding == "5L+1"){
+    Bases=cbind('A', 'C', "G", "T", "M", "W", "N", "-")
+    Codes=cbind("1 0 0 0 0 ", "0 1 0 0 0 ", "0 0 1 0 0 ", "0 0 0 0 0 ", "0 0 0 1 0 ", "0 0 1 0 1 ", "0.25 0.25 0.25 0 0 ", "0 0 0 0 0 ")
+  }
+  else if(encoding == "4L+1"){
+    Bases=cbind('A', 'C', "G", "T", "M", "W", "N", "-")
+    Codes=cbind("0 1 0 0 ", "0 0 0 0 ", "1 0 0 0 ", "0 0 1 0 ", "0 0 0 1 ", "1 0 0 0 ", "0.25 0.25 0.25 0 ", "0 0 0 0 ")
+  }
   purrr::map_chr(seqs,
                  function(seq){
                    Codes[match(seq, Bases)] %>%
@@ -57,6 +30,27 @@ SeqToByte <- function(sequences,
                  }
   )
 }
+
+
+SeqToMethylByte <- function(sequences, encoding = "(3+2)L+1"){
+  seqs = strsplit(sequences, "")
+  
+  if(encoding == "(3+2)L+1"){
+    Bases=cbind("M", "W", "A", "C", "G", "T", "N", "-")
+    Codes=cbind("1 0 ", "0 1 ", "0 0 ", "0 0 ", "0 0 ", "0 0 ", "0 0 ", "0 0 ")
+  }
+  else if(encoding == "(3+1)L+1"){
+    Bases=cbind("M", "W", "A", "C", "G", "T", "N", "-")
+    Codes=cbind("1 ", "0 ", "0 ", "0 ", "0 ", "0 ", "0 ", "0 ")
+  }
+  purrr::map_chr(seqs,
+                 function(seq){
+                   Codes[match(seq, Bases)] %>%
+                     stringr::str_c(collapse = "")
+                 }
+  )
+}
+
 
 #' Convert energy matrix to energy model coefficients
 #' 
@@ -103,4 +97,40 @@ kmer <- function(k){
 #' selectVariants(data, "GTACGAC", maxMismatches=1)
 selectVariants <- function(data, reference, maxMismatches = 1) {
   return(dplyr::filter(data, countMismatch(Sequence, reference) <= maxMismatches))
+}
+
+#' Count the number of mismatches of sequence(s) to some reference site
+#' 
+#' @param sequences List of sequences.
+#' @param reference Reference sequence.
+#' @return The number of mismatches between \code{sequences} and \code{reference}.
+#' @examples
+#' countMismatch("GTAC", "GAAC")
+#' countMismatch(c("GTAC", "GAAC"), "GAAC")
+countMismatch <- function(sequences, reference){
+  seqs = strsplit(sequences, "")
+  ref  = strsplit(reference, "")[[1]]
+  
+  purrr::map_int(seqs,
+                 function(seq) {sum(seq!=ref, na.rm=TRUE)})
+}
+
+
+#' Highlight the mismatches of sequence(s) to some reference site with '-'
+#' 
+#' @param sequences List of sequences.
+#' @param reference Reference sequence.
+#' @return Sequences with those mismatched portions to reference changed to '-'
+#' @examples
+#' highlightMismatch("GTAC", "GAAC")
+#' highlightMismatch(c("GTAC", "GAAC"), "GAAC")
+highlightMismatch<- function(sequences, reference){
+  seqs = strsplit(sequences, "")
+  ref  = strsplit(reference, "")[[1]]
+  
+  purrr::map_chr(seqs,
+                 function(seq){
+                   seq[seq==ref] <- '-'
+                   stringr::str_c(seq,collapse = "")
+                 })
 }

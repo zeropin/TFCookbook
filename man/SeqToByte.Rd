@@ -4,11 +4,7 @@
 \alias{SeqToByte}
 \title{Convert nucleotide sequence to binary code based on Bases->Codes correspondence}
 \usage{
-SeqToByte(
-  sequences,
-  Bases = cbind("A", "C", "G", "T", "N"),
-  Codes = cbind("0 1 0 ", "0 0 0 ", "1 0 0 ", "0 0 1 ", "0.25 0.25 0.25 ")
-)
+SeqToByte(sequences, encoding = "3L+1")
 }
 \arguments{
 \item{sequences}{List of sequences.}
