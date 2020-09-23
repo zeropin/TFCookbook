@@ -17,19 +17,6 @@ getEnergyMatrix <- function(model) {
   return(energyMatrix)
 }
 
-anchorMatrix <- function(anchor, upstream = 0, downstream = 0) {
-  m <- matrix(0L,
-              nrow = 4, ncol = upstream + nchar(anchor) + downstream, byrow = TRUE,
-              dimnames = list(c("A", "C", "G", "T"))
-  )
-  
-  m["A", upstream + which(strsplit(anchor, "")[[1]] == "A")] <- 1
-  m["C", upstream + which(strsplit(anchor, "")[[1]] == "C")] <- 1
-  m["G", upstream + which(strsplit(anchor, "")[[1]] == "G")] <- 1
-  m["T", upstream + which(strsplit(anchor, "")[[1]] == "T")] <- 1
-  
-  return(m)
-}
 
 addMethylMatrix <- function(energyMatrix, MethylModel, encoding = "(3+2)L+1"){
   coeff <- MethylModel$coefficients

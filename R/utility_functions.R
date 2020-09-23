@@ -1,14 +1,11 @@
-#' Convert nucleotide sequence to binary code based on Bases->Codes correspondence
+#' Convert DNA sequences to binary code based on various encoding schemes
 #' 
 #' @param sequences List of sequences.
-#' @param Bases List of Bases to be mapped
-#' @param Codes List of Binary codes corresponding to Bases
+#' @param encoding The encoding scheme used to convert sequences to binary vector, including 3L+1, 4L+1, 5L+1. 3L+1 as default.
 #' @return Binary codes converted from sequences
 #' @examples
 #' SeqToByte("GTAC")
-#' SeqToByte("GTAAN",
-#' Bases=cbind('A', 'C', "G", "T", "N"),
-#' Codes=cbind("0 1 0 ", "0 0 0 ", "1 0 0 ", "0 0 1 ", "0.25 0.25 0.25 "))
+#' SeqToByte("GTAAN", encoding = "3L+1“)
 SeqToByte <- function(sequences, encoding = "3L+1"){
   seqs = strsplit(sequences, "")
 
@@ -17,7 +14,7 @@ SeqToByte <- function(sequences, encoding = "3L+1"){
     Codes=cbind("0 1 0 ", "0 0 0 ", "1 0 0 ", "0 0 1 ", "0.25 0.25 0.25 ", "0 0 0 ")}
   else if(encoding == "5L+1"){
     Bases=cbind('A', 'C', "G", "T", "M", "W", "N", "-")
-    Codes=cbind("1 0 0 0 0 ", "0 1 0 0 0 ", "0 0 1 0 0 ", "0 0 0 0 0 ", "0 0 0 1 0 ", "0 0 1 0 1 ", "0.25 0.25 0.25 0 0 ", "0 0 0 0 0 ")
+    Codes=cbind("0 1 0 0 0 ", "0 0 0 0 0 ", "1 0 0 0 0 ", "0 0 1 0 0 ", "0 0 0 1 0 ", "1 0 0 0 1 ", "0.25 0.25 0.25 0 0 ", "0 0 0 0 0 ")
   }
   else if(encoding == "4L+1"){
     Bases=cbind('A', 'C', "G", "T", "M", "W", "N", "-")
@@ -31,7 +28,14 @@ SeqToByte <- function(sequences, encoding = "3L+1"){
   )
 }
 
-
+#' Convert DNA sequences to binary code only including methylation-related bytes
+#' 
+#' @param sequences List of sequences.
+#' @param encoding Either (3+1)L+1 or (3+1)L+1
+#' @return Binary codes converted from sequences, only M or W positions have non-zero bytes.
+#' @examples
+#' SeqToMethylByte("GTAMW")
+#' SeqToByte("GTAMWCGN", encoding = "(3+2)L+1“)
 SeqToMethylByte <- function(sequences, encoding = "(3+2)L+1"){
   seqs = strsplit(sequences, "")
   
@@ -53,7 +57,7 @@ SeqToMethylByte <- function(sequences, encoding = "(3+2)L+1"){
 
 
 #' Convert energy matrix to energy model coefficients
-#' 
+#' Encoding scheme: 3L+1
 #' @param energyMatrix
 #' @return energy model coefficients
 #' @examples
