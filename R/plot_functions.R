@@ -1,3 +1,10 @@
+#' Visualize some energy matrix by plotting logo
+#' 
+#' @param energyMatrix
+#' @param col_scheme The color scheme used to illustrate different nucleotides, which can be created by function ggseqlogo::make_col_scheme
+#' @return A ggplot object illustrating the energy logo.
+#' @examples
+#' plotEnergyLogo(energyMatrix)
 plotEnergyLogo <- function(energyMatrix, col_scheme = NA) {
   if(is.na(col_scheme))
     col_scheme = ggseqlogo::make_col_scheme(chars=c('A', 'C', 'G', 'T', 'M', 'W', 'N'),

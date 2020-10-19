@@ -1,4 +1,9 @@
-
+#' Derive energy matrix from position-based energy model including parameters like 1CG, 1CT, 2CA, 3CG, etc
+#' 
+#' @param model position-based energy model, returned by buildEnergymodel function.
+#' @return Energy matrix
+#' @examples
+#' getEnergyMatrix(model)
 getEnergyMatrix <- function(model) {
   coeff <- model$coefficients
   num <- (length(coeff) - 1) / 3
@@ -36,6 +41,15 @@ addMethylMatrix <- function(energyMatrix, MethylModel, encoding = "(3+2)L+1"){
   return(rbind(energyMatrix, MethylMatrix))
 }
 
+#' Add some prefixed sequence to existing energy matrix
+#' 
+#' @param energyMatrix existing Energy Matrix
+#' @param anchor The prefixed sequence
+#' @param position The starting position of the prefixed sequence
+#' @param height The height of prefixed sequence, which determines how it looks at energy logo.
+#' @return Energy matrix with some prefixed sequence at designated position
+#' @examples
+#' addAnchorMatrix(energyMatrix, anchor = "TAGC", position = 2, height = 0.25)
 addAnchorMatrix <- function(energyMatrix, anchor, position=1, height=0.2) {
   energyMatrix[c("A","C","G","T"), position:(position+nchar(anchor)-1)] <- 0
   
@@ -63,6 +77,12 @@ addAnchorMatrix <- function(energyMatrix, anchor, position=1, height=0.2) {
   return(energyMatrix)
 }
 
+#' Reverse some existing energy matrix
+#' 
+#' @param energyMatrix
+#' @return reversed energy matrix
+#' @examples
+#' reverseComplement(energyMatrix)
 reverseComplement <- function(energyMatrix){
   reverseMatrix <- matrix(0L,
                           nrow = 4, ncol = dim(energyMatrix)[2], byrow = TRUE,

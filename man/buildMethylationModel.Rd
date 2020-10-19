@@ -2,19 +2,23 @@
 % Please edit documentation in R/fit_models.R
 \name{buildMethylationModel}
 \alias{buildMethylationModel}
-\title{Build energy model based on Sequence-Energy relationship}
+\title{Build model of methylation effect based on pair-wise compared data between methylated and unmethylated sites}
 \usage{
 buildMethylationModel(data, encoding = "(3+2)L+1", withIntercept = FALSE)
 }
 \arguments{
 \item{data}{Data frame containing at least two variables -- Sequence and Energy}
+
+\item{encoding}{The encoding scheme used for modeling, either (3+2)L+1 or (3+1)L+1.}
+
+\item{withIntercept}{Working with pairwise compaired data doesn't require intercept parameter, so it is FALSE by default.}
 }
 \value{
-Linear model containing position-based energy coefficients, e.g., 1CA, 1CG, 1CT, 2CA, etc.
+Linear model containing position-based energy coefficients, e.g., 1CM, 1GW, 2CM, 2GW, etc.
 }
 \description{
-Build energy model based on Sequence-Energy relationship
+Build model of methylation effect based on pair-wise compared data between methylated and unmethylated sites
 }
 \examples{
-buildEnergyModel(data)
+buildMehylationModel(data, encoding = "(3+1)L+1")
 }

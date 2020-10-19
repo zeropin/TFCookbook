@@ -8,6 +8,8 @@ buildEnergyModel(data, encoding = "3L+1")
 }
 \arguments{
 \item{data}{Data frame containing at least two variables -- Sequence and Energy}
+
+\item{encoding}{The encoding scheme used to build model, including 3L+1, 4L+1, 5L+1.}
 }
 \value{
 Linear model containing position-based energy coefficients, e.g., 1CA, 1CG, 1CT, 2CA, etc.

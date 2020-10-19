@@ -2,7 +2,8 @@
 % Please edit documentation in R/utility_functions.R
 \name{toCoeffs}
 \alias{toCoeffs}
-\title{Convert energy matrix to energy model coefficients}
+\title{Convert energy matrix to energy model coefficients
+Encoding scheme: 3L+1}
 \usage{
 toCoeffs(energyMatrix)
 }
@@ -11,6 +12,7 @@ energy model coefficients
 }
 \description{
 Convert energy matrix to energy model coefficients
+Encoding scheme: 3L+1
 }
 \examples{
 toCoeffs("GTAC")
