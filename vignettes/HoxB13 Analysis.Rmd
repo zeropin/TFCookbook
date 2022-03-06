@@ -1,16 +1,18 @@
 ---
 title: "Specificity and methylation sensitivity analysis of HoxB13"
-author: Zheng Zuo
+author: "Zheng Zuo"
 date: "Sep 16, 2020"
 output:
-  html_document:
-    df_print: paged
-    theme: lumen
-    highlight: pygments
+  word_document:
     toc: yes
-    toc_float: yes
   pdf_document:
     toc: yes
+  html_document:
+    df_print: paged
+    highlight: pygments
+    theme: lumen
+    toc: yes
+    toc_float: yes
 ---
 
 ## Introduction

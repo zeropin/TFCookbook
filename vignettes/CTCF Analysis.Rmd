@@ -1,14 +1,16 @@
 ---
 title: "Specificity and Methylation sensitivity analysis of CTCF(F1-F9)"
-author: Zheng Zuo
+author: "Zheng Zuo"
 date: "Sep 12, 2020"
 output:
+  word_document:
+    toc: yes
   pdf_document:
     toc: yes
   html_document:
     df_print: paged
-    theme: lumen
     highlight: pygments
+    theme: lumen
     toc: yes
     toc_float: yes
 ---
@@ -57,7 +59,7 @@ load("../data/CTCF.rda")
 
 ```{r eval=FALSE, include=FALSE}
 CTCF %>%
-  filter(Property == "un", stri_detect_regex(Sequence, "C..GTAGGGGGCACTA")) %>%
+  filter(Property == "un", stri_detect_regex(Sequence, "CCACTAGGGCACACTA")) %>%
   arrange(Energy)
 ```
 
@@ -70,7 +72,7 @@ CTCF.Model.3Lp1<- CTCF %>%
   TFCookbook::buildEnergyModel(encoding = "3L+1")
 
 CTCF.Model.3Lp1%>%
-  TFCookbook::getEnergyMatrix() %>%
+  TFCookbook::getEnergyMatrix() -> CTCF.Core.Matrix
   TFCookbook::plotEnergyLogo() +
   addFingers(index = 7:3, yMin =  -1.4, yMax = 1.4) +
   labs(title = "Specificity profile of CTCF(F1-F9)\n based on energy values from unmethylated sites only") +

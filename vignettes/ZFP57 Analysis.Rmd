@@ -1,0 +1,79 @@
+---
+title: "Specificity and Methylation sensitivity analysis of mZFP57(F1-F3)"
+output: html_notebook
+---
+
+```{r}
+require(dplyr)
+require(stringi)
+
+reference = "CCACTAGGGGGCGCTA"
+```
+
+
+```{r}
+ZFP57
+```
+
+```{r}
+ZFP57 %>%
+  group_by(Property) %>%
+  summarise(n())
+```
+
+
+```{r warning = FALSE}
+ZFP57 <- ZFP57 %>%
+  dplyr::mutate(`Bound/Unbound` = Bound/Unbound,
+                Energy = -log(Bound/Unbound))
+
+ZFP57 %>%
+  dplyr::filter(Property == "un") %>%
+  TFCookbook::buildEnergyModel(encoding = "3L+1") %>%
+  TFCookbook::getEnergyMatrix(encoding = "3L+1") %>%
+  TFCookbook::plotEnergyLogo()
+```
+
+```{r fig.height=5, fig.width=8, warning=FALSE}
+require(ggplot2)
+require(ggrepel)
+
+CTCF.un <- subset(CTCF, Property=="un")
+CTCF.me <- subset(CTCF, Property=="me")
+
+inner_join(CTCF.un, CTCF.me, by = "Sequence") %>%
+  dplyr::select(Sequence,
+         Energy.un = `Energy.x`,
+         Energy.me = `Energy.y`) %>%
+  dplyr::mutate(CpG.containing = as.factor(stringi::stri_count_fixed(Sequence, "CG")),
+                Label = if_else(abs(Energy.un - Energy.me)>1, Sequence, "")) %>%
+  ggplot(aes(x = Energy.un, y = Energy.me, shape = CpG.containing, color = CpG.containing)) +
+  geom_label_repel(aes(label = Label), show.legend = FALSE) +
+  geom_point() +
+  geom_abline(intercept = -0.25, slope = 1, linetype="dashed") +
+  geom_abline(intercept = 0.25, slope = 1, linetype="dashed") +
+  ggtitle("Binding energy comparison between M.SssI treated and untreated sites") +
+  xlab("Binding energy for untreated sites (kT)") + ylab("Binding energy for M.SssI treated sites (kT)")
+  
+```
+
+
+```{r}
+ZFP57 %>%
+  dplyr::mutate(Sequence = if_else(Property=="M.SssI",
+                                   stringi::stri_replace_all_fixed(Sequence, "CG", "MW"),
+                                   Sequence)) %>%
+  dplyr::mutate(Sequence = if_else(Property=="dM",
+                                   stringi::stri_replace_all_fixed(Sequence, "TGCCGC", "TGCMWC"),
+                                   Sequence)) %>%
+  dplyr::mutate(Sequence = if_else(Property=="tH",
+                                   stringi::stri_replace_all_fixed(Sequence, "TGCCGC", "TGCMGC"),
+                                   Sequence)) %>%
+  dplyr::mutate(Sequence = if_else(Property=="bH",
+                                   stringi::stri_replace_all_fixed(Sequence, "TGCCGC", "TGCCWC"),
+                                   Sequence)) %>%
+  TFCookbook::buildEnergyModel(encoding = "5L+1") %>%
+  TFCookbook::getEnergyMatrix(encoding = "5L+1") %>%
+  TFCookbook::plotEnergyLogo()
+```
+
