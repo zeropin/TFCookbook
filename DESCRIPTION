@@ -1,7 +1,7 @@
 Package: TFCookbook
 Type: Package
 Title: Analyzing protein-DNA interactions data in principled way
-Version: 2.0
+Version: 2.1
 Author: Zheng Zuo
 Maintainer: Zheng Zuo <zeropinzuo@gmail.com>
 Description: This package is currently developed and maintained by Zheng Zuo, and accompanied by online resourse book TFCookbook.com for analysis of protein-DNA interactions data.
@@ -11,8 +11,11 @@ LazyData: true
 Imports:
     dplyr,
     purrr,
-    tidyr
+    tidyr,
+    Biostrings, BSgenome,
+    GenomicRanges
 Suggests:
     ggplot2,
     ggseqlogo
-RoxygenNote: 7.1.0
+LinkingTo: Rcpp, RcppArmadillo
+RoxygenNote: 7.1.2

@@ -56,26 +56,54 @@ buildMethylationModel <- function(data, encoding = "(3+2)L+1", withIntercept = F
 
 
 #' Predict the binding energy of input sequences based on energy model
-#' 
+#' @export
 #' @param sequences Input sequences
 #' @param model Linear model containing position-based energy coefficients, e.g., 1CA, 1CG, 1CT, 2CA, etc.
-#' @return Predicted binding energy values of \code{sequences} based on \code{model}
+#' @return Predicted binding energy values of \code{sequences} based on \code{model} or Position energy matrix (PEM)
 #' @examples
 #' predictEnergy(sequences, model)
-predictEnergy <- function(sequences, model) {
-  #num <- (model$rank - 1) / 3  
-  num <- nchar(sequences[[1]]) 
-  
-  #num shoulbe be the number of nucleotide positions used for prediction，model$rank is the number of coefficients in the models.
-  # In some instances, there are NA values for some parameters, which are not included in total rank, so nchar(sequence) is used instead.
-  
-  tibble(ByteCode = SeqToByte(sequences)) %>%
-    tidyr::separate(ByteCode,
-      into = paste0(rep(1:num, each = 3), c("CG", "CA", "CT")),
-      convert = TRUE
-    ) %>%
-    predict.lm(model, newdata = ., type = "response")
-}
+setGeneric("predictEnergy",
+           function(sequences, model, ...) standardGeneric("predictEnergy"))
+
+#' @describeIn predictEnergy Sequences/EnergyModel
+#' @export
+setMethod("predictEnergy", signature(sequences = "character",
+                                     model     = "lm"),
+          function(sequences, model) {
+            #num <- (model$rank - 1) / 3  
+            num <- nchar(sequences[[1]]) 
+            
+            #num shoulbe be the number of nucleotide positions used for prediction，model$rank is the number of coefficients in the models.
+            # In some instances, there are NA values for some parameters, which are not included in total rank, so nchar(sequence) is used instead.
+            
+            tibble(ByteCode = SeqToByte(sequences)) %>%
+              tidyr::separate(ByteCode,
+                              into = paste0(rep(1:num, each = 3), c("CG", "CA", "CT")),
+                              convert = TRUE
+              ) %>%
+              predict.lm(model, newdata = ., type = "response")
+          })
+
+
+#' @describeIn predictEnergy Sequences/PEM
+#' @export
+setMethod("predictEnergy", signature(sequences = "character",
+                                     model     = "matrix"),
+          function(sequences, model) {
+            num <- ncol(model) 
+            
+            purrr::map_dbl(sequences, function(seq){
+              bases = strsplit(seq, "")[[1]][1:num]
+              
+              return(sum(model['A', which(bases=="A")])+
+                     sum(model['C', which(bases=="C")])+
+                     sum(model['T', which(bases=="T")])+
+                     sum(model['G', which(bases=="G")]))
+              })
+      
+          })
+
+ 
 
 #' Predict the binding energy of input sequences based on energy model including methylation parameters
 #' 

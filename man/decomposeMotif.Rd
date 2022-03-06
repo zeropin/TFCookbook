@@ -4,14 +4,14 @@
 \alias{decomposeMotif}
 \title{Decompose some composite motif into two separate submotifs}
 \usage{
-decomposeMotif(compositeMotif, configuration = "F0F", type = "energy")
+decomposeMotif(compositeMotif, configuration = "F0F", type = "PEM")
 }
 \arguments{
 \item{configuration}{"F0F" by default, i.e., Forward-0bp gap-Forward orientation}
 
-\item{motifA}{The first motif (energyMatrix by default)}
+\item{motifA}{The first motif (PEM by default)}
 
-\item{motifB}{The second motif (energyMatrix by default)}
+\item{motifB}{The second motif (PEM by default)}
 }
 \value{
 compositeMotif constructed from motifA and motifB

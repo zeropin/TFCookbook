@@ -5,7 +5,7 @@
 \title{Convert energy matrix to energy model coefficients
 Encoding scheme: 3L+1}
 \usage{
-toCoeffs(energyMatrix)
+toCoeffs(PEM)
 }
 \value{
 energy model coefficients

@@ -4,7 +4,7 @@
 \alias{plotEnergyLogo}
 \title{Visualize some energy matrix by plotting logo}
 \usage{
-plotEnergyLogo(energyMatrix, col_scheme = NA)
+plotEnergyLogo(PEM, col_scheme = c("default", "classic"))
 }
 \arguments{
 \item{col_scheme}{The color scheme used to illustrate different nucleotides, which can be created by function ggseqlogo::make_col_scheme}
@@ -16,5 +16,5 @@ A ggplot object illustrating the energy logo.
 Visualize some energy matrix by plotting logo
 }
 \examples{
-plotEnergyLogo(energyMatrix)
+plotEnergyLogo(PEM)
 }

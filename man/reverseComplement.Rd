@@ -2,16 +2,19 @@
 % Please edit documentation in R/matrix_functions.R
 \name{reverseComplement}
 \alias{reverseComplement}
-\title{Reverse some existing energy matrix}
+\title{Reverse some existing position energy matrix}
 \usage{
-reverseComplement(energyMatrix)
+reverseComplement(PEM)
+}
+\arguments{
+\item{matrix}{position energy matrix}
 }
 \value{
 reversed energy matrix
 }
 \description{
-Reverse some existing energy matrix
+Reverse some existing position energy matrix
 }
 \examples{
-reverseComplement(energyMatrix)
+reverseComplement(PEM)
 }

@@ -4,10 +4,10 @@
 \alias{addAnchorMatrix}
 \title{Add some prefixed sequence to existing energy matrix}
 \usage{
-addAnchorMatrix(energyMatrix, anchor, position = 1, height = 0.2)
+addAnchorMatrix(PEM, anchor, position = 1, height = 0.2)
 }
 \arguments{
-\item{energyMatrix}{existing Energy Matrix}
+\item{PEM}{existing Energy Matrix}
 
 \item{anchor}{The prefixed sequence}
 
@@ -22,5 +22,5 @@ Energy matrix with some prefixed sequence at designated position
 Add some prefixed sequence to existing energy matrix
 }
 \examples{
-addAnchorMatrix(energyMatrix, anchor = "TAGC", position = 2, height = 0.25)
+addAnchorMatrix(PEM, anchor = "TAGC", position = 2, height = 0.25)
 }

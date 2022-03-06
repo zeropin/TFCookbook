@@ -2,9 +2,15 @@
 % Please edit documentation in R/fit_models.R
 \name{predictEnergy}
 \alias{predictEnergy}
+\alias{predictEnergy,character,lm-method}
+\alias{predictEnergy,character,matrix-method}
 \title{Predict the binding energy of input sequences based on energy model}
 \usage{
-predictEnergy(sequences, model)
+predictEnergy(sequences, model, ...)
+
+\S4method{predictEnergy}{character,lm}(sequences, model)
+
+\S4method{predictEnergy}{character,matrix}(sequences, model)
 }
 \arguments{
 \item{sequences}{Input sequences}
@@ -12,11 +18,18 @@ predictEnergy(sequences, model)
 \item{model}{Linear model containing position-based energy coefficients, e.g., 1CA, 1CG, 1CT, 2CA, etc.}
 }
 \value{
-Predicted binding energy values of \code{sequences} based on \code{model}
+Predicted binding energy values of \code{sequences} based on \code{model} or Position energy matrix (PEM)
 }
 \description{
 Predict the binding energy of input sequences based on energy model
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{sequences = character,model = lm}: Sequences/EnergyModel
+
+\item \code{sequences = character,model = matrix}: Sequences/PEM
+}}
+
 \examples{
 predictEnergy(sequences, model)
 }

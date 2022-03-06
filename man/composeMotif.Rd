@@ -4,12 +4,12 @@
 \alias{composeMotif}
 \title{Build composite motif based on two existing motifs with specified configurations}
 \usage{
-composeMotif(motifA, motifB, configuration = "F0F", type = "energy")
+composeMotif(motifA, motifB, configuration = "F0F", type = "PEM")
 }
 \arguments{
-\item{motifA}{The first motif (energyMatrix by default)}
+\item{motifA}{The first motif (PEM by default)}
 
-\item{motifB}{The second motif (energyMatrix by default)}
+\item{motifB}{The second motif (PEM by default)}
 
 \item{configuration}{"F0F" by default, i.e., Forward-0bp gap-Forward orientation}
 }

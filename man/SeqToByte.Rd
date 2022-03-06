@@ -2,26 +2,18 @@
 % Please edit documentation in R/utility_functions.R
 \name{SeqToByte}
 \alias{SeqToByte}
-\title{Convert nucleotide sequence to binary code based on Bases->Codes correspondence}
+\title{Convert DNA sequences to binary code based on various encoding schemes}
 \usage{
 SeqToByte(sequences, encoding = "3L+1")
 }
 \arguments{
 \item{sequences}{List of sequences.}
 
-\item{Bases}{List of Bases to be mapped}
-
-\item{Codes}{List of Binary codes corresponding to Bases}
+\item{encoding}{The encoding scheme used to convert sequences to binary vector, including 3L+1, 4L+1, 5L+1. 3L+1 as default.}
 }
 \value{
 Binary codes converted from sequences
 }
 \description{
-Convert nucleotide sequence to binary code based on Bases->Codes correspondence
-}
-\examples{
-SeqToByte("GTAC")
-SeqToByte("GTAAN",
-Bases=cbind('A', 'C', "G", "T", "N"),
-Codes=cbind("0 1 0 ", "0 0 0 ", "1 0 0 ", "0 0 1 ", "0.25 0.25 0.25 "))
+Convert DNA sequences to binary code based on various encoding schemes
 }

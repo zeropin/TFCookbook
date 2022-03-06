@@ -58,18 +58,18 @@ SeqToMethylByte <- function(sequences, encoding = "(3+2)L+1"){
 
 #' Convert energy matrix to energy model coefficients
 #' Encoding scheme: 3L+1
-#' @param energyMatrix
+#' @param PEM
 #' @return energy model coefficients
 #' @examples
 #' toCoeffs("GTAC")
-toCoeffs <- function(energyMatrix) {
-  coeff <- array(0L, dim = 3 * ncol(energyMatrix))
-  names(coeff) <- paste0(rep(1:ncol(energyMatrix), each = 3), c("CG", "CA", "CT"))
+toCoeffs <- function(PEM) {
+  coeff <- array(0L, dim = 3 * ncol(PEM))
+  names(coeff) <- paste0(rep(1:ncol(PEM), each = 3), c("CG", "CA", "CT"))
 
-  for (i in 1:ncol(energyMatrix)) {
-    coeff[paste0(i, "CG")] <- energyMatrix["G", i] - energyMatrix["C", i]
-    coeff[paste0(i, "CA")] <- energyMatrix["A", i] - energyMatrix["C", i]
-    coeff[paste0(i, "CT")] <- energyMatrix["T", i] - energyMatrix["C", i]
+  for (i in 1:ncol(PEM)) {
+    coeff[paste0(i, "CG")] <- PEM["G", i] - PEM["C", i]
+    coeff[paste0(i, "CA")] <- PEM["A", i] - PEM["C", i]
+    coeff[paste0(i, "CT")] <- PEM["T", i] - PEM["C", i]
   }
 
   return(coeff)
@@ -138,3 +138,36 @@ highlightMismatch<- function(sequences, reference){
                    stringr::str_c(seq,collapse = "")
                  })
 }
+
+
+## validate genome input
+
+setGeneric(".validate_genome_input",
+           function(genome) standardGeneric(".validate_genome_input"))
+
+setMethod(".validate_genome_input", signature(genome = "BSgenome"),
+          function(genome) {
+            return(genome)
+          })
+
+setMethod(".validate_genome_input", signature(genome = "DNAStringSet"),
+          function(genome) {
+            return(genome)
+          })
+
+setMethod(".validate_genome_input", signature(genome = "character"),
+          function(genome) {
+            if (any(is.na(genome)))
+              stop("No genome provided")
+            if (length(genome) > 1){
+              stopifnot(all(genome == genome[[1]]))
+              genome <- genome[[1]]
+            }
+            return(BSgenome::getBSgenome(genome))
+          })
+
+setMethod(".validate_genome_input", signature(genome = "ANY"),
+          function(genome) {
+            stop("genome input must be a BSgenome, DNAStringSet, or FaFile",
+                 "object or a string recognized by getBSgenome")
+          })

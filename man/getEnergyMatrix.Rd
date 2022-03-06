@@ -2,6 +2,7 @@
 % Please edit documentation in R/matrix_functions.R
 \name{getEnergyMatrix}
 \alias{getEnergyMatrix}
+\alias{toPEM}
 \title{Derive energy matrix from position-based energy model including parameters like 1CG, 1CT, 2CA, 3CG, etc}
 \usage{
 getEnergyMatrix(model)

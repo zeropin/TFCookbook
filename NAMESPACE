@@ -1,1 +1,8 @@
 exportPattern("^[[:alpha:]]+")
+importClassesFrom(GenomicRanges,GenomicRanges)
+importFrom(BSgenome,getBSgenome)
+importFrom(Biostrings,DNAString)
+importFrom(Biostrings,DNAStringSet)
+importFrom(Biostrings,getSeq)
+importFrom(Rcpp,sourceCpp)
+useDynLib(TFCookbook, .registration = TRUE)
