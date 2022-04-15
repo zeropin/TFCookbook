@@ -146,6 +146,9 @@ setMethod("as.PEM",
 #' @examples
 #' buildCompositeMotif(SOX2.matrix, Oct4.matrix, configuration = "F0F")
 composeMotif <- function(motifA, motifB, configuration = "F0F", type = "PEM") {
+  motifA <- .validate_PEM_input(motifA)
+  motifB <- .validate_PEM_input(motifB)
+  
   conf <- strsplit(configuration, split="")[[1]]
   names(conf) <- c("A", "gap", "B")
   

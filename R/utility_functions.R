@@ -140,8 +140,16 @@ highlightMismatch<- function(sequences, reference){
 }
 
 
-## validate genome input
+## validate PEM input
+.validate_PEM_input <- function(PEM){
+  if(!is.matrix(PEM))
+    stop("The input is not a matrix")
+  if(!all(c("A", "C", "G", "T") %in% rownames(PEM)))
+    stop("The matrix should contain all the rownames corresponding to nucleotides (A, C, G, T)")
+  return(PEM)
+}
 
+## validate genome input
 setGeneric(".validate_genome_input",
            function(genome) standardGeneric(".validate_genome_input"))
 

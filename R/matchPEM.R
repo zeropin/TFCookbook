@@ -13,6 +13,7 @@ setMethod("matchPEM", signature(PEM     = "matrix",
                    out = c("positions", "scores"),
                    E.cutoff = -3) {
             out <- match.arg(out)
+            PEM <- .validate_PEM_input(PEM)
             GenomicRanges::strand(subject) <- "+"
             genome <- .validate_genome_input(genome)
             seqs <- getSeq(x = genome, names = subject, as.character = TRUE)

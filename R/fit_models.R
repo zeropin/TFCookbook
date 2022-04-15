@@ -90,6 +90,7 @@ setMethod("predictEnergy", signature(sequences = "character",
 setMethod("predictEnergy", signature(sequences = "character",
                                      model     = "matrix"),
           function(sequences, model) {
+            model <- .validate_PEM_input(model)
             num <- ncol(model) 
             
             purrr::map_dbl(sequences, function(seq){
