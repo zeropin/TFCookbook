@@ -8,4 +8,4 @@ You can pull and install TFCookbook package through R command:
 Please do not hesitate to contact me if you have any issue.
 
 Zheng Zuo
-zeropinzuo@gmail.com
+zeropin@live.cn
