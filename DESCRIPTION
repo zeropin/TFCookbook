@@ -3,7 +3,7 @@ Type: Package
 Title: Analyzing protein-DNA interactions data in principled way
 Version: 2.1
 Author: Zheng Zuo
-Maintainer: Zheng Zuo <zeropinzuo@gmail.com>
+Maintainer: Zheng Zuo <zeropin@live.cn>
 Description: This package is currently developed and maintained by Zheng Zuo, and accompanied by online resourse book TFCookbook.com for analysis of protein-DNA interactions data.
 License: GPL-3
 Encoding: UTF-8

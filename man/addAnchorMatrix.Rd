@@ -4,7 +4,7 @@
 \alias{addAnchorMatrix}
 \title{Add some prefixed sequence to existing energy matrix}
 \usage{
-addAnchorMatrix(PEM, anchor, position = 1, height = 0.2)
+addAnchorMatrix(PEM = NULL, anchor, position = 1, height = 0.2)
 }
 \arguments{
 \item{PEM}{existing Energy Matrix}

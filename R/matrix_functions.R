@@ -23,9 +23,6 @@ getEnergyMatrix <- function(model) {
   return(PEM)
 }
 
-toPEM <- getEnergyMatrix
-
-
 
 addMethylMatrix <- function(PEM, MethylModel, encoding = "(3+2)L+1"){
   coeff <- MethylModel$coefficients
@@ -54,7 +51,11 @@ addMethylMatrix <- function(PEM, MethylModel, encoding = "(3+2)L+1"){
 #' @return Energy matrix with some prefixed sequence at designated position
 #' @examples
 #' addAnchorMatrix(PEM, anchor = "TAGC", position = 2, height = 0.25)
-addAnchorMatrix <- function(PEM, anchor, position=1, height=0.2) {
+addAnchorMatrix <- function(PEM = NULL, anchor, position=1, height=0.2) {
+  if(is.null(PEM))
+    PEM <- matrix(nrow = 4, ncol = nchar(anchor), dimnames = list(c("A", "C", "G", "T")))
+  
+  
   PEM[c("A","C","G","T"), position:(position+nchar(anchor)-1)] <- 0
   
   PEM["A", position - 1 + which(strsplit(anchor, "")[[1]] == "A")] <- -height
@@ -62,22 +63,22 @@ addAnchorMatrix <- function(PEM, anchor, position=1, height=0.2) {
   PEM["G", position - 1 + which(strsplit(anchor, "")[[1]] == "G")] <- -height
   PEM["T", position - 1 + which(strsplit(anchor, "")[[1]] == "T")] <- -height
 
-  PEM["A", position - 1 + which(strsplit(anchor, "")[[1]] == "M")] <- -height*0.5
-  PEM["C", position - 1 + which(strsplit(anchor, "")[[1]] == "M")] <- -height*0.5
+  PEM["A", position - 1 + which(strsplit(anchor, "")[[1]] == "M")] <- -height
+  PEM["C", position - 1 + which(strsplit(anchor, "")[[1]] == "M")] <- -height
   
-  PEM["T", position - 1 + which(strsplit(anchor, "")[[1]] == "K")] <- -height*0.5
-  PEM["G", position - 1 + which(strsplit(anchor, "")[[1]] == "K")] <- -height*0.5
+  PEM["T", position - 1 + which(strsplit(anchor, "")[[1]] == "K")] <- -height
+  PEM["G", position - 1 + which(strsplit(anchor, "")[[1]] == "K")] <- -height
  
-  PEM["A", position - 1 + which(strsplit(anchor, "")[[1]] == "R")] <- -height*0.5
-  PEM["G", position - 1 + which(strsplit(anchor, "")[[1]] == "R")] <- -height*0.5
+  PEM["A", position - 1 + which(strsplit(anchor, "")[[1]] == "R")] <- -height
+  PEM["G", position - 1 + which(strsplit(anchor, "")[[1]] == "R")] <- -height
   
-  PEM["T", position - 1 + which(strsplit(anchor, "")[[1]] == "Y")] <- -height*0.5
-  PEM["C", position - 1 + which(strsplit(anchor, "")[[1]] == "Y")] <- -height*0.5
+  PEM["T", position - 1 + which(strsplit(anchor, "")[[1]] == "Y")] <- -height
+  PEM["C", position - 1 + which(strsplit(anchor, "")[[1]] == "Y")] <- -height
   
-  PEM["A", position - 1 + which(strsplit(anchor, "")[[1]] == "N")] <- -height*0.25
-  PEM["G", position - 1 + which(strsplit(anchor, "")[[1]] == "N")] <- -height*0.25
-  PEM["T", position - 1 + which(strsplit(anchor, "")[[1]] == "N")] <- -height*0.25
-  PEM["C", position - 1 + which(strsplit(anchor, "")[[1]] == "N")] <- -height*0.25
+  PEM["A", position - 1 + which(strsplit(anchor, "")[[1]] == "N")] <- -height
+  PEM["G", position - 1 + which(strsplit(anchor, "")[[1]] == "N")] <- -height
+  PEM["T", position - 1 + which(strsplit(anchor, "")[[1]] == "N")] <- -height
+  PEM["C", position - 1 + which(strsplit(anchor, "")[[1]] == "N")] <- -height
   return(PEM)
 }
 
@@ -134,7 +135,7 @@ setMethod("as.PEM",
 setMethod("as.PEM",
           signature(subject = "lm"),
           function(subject) {
-            return(toPEM(subject))
+            return(getEnergyMatrix(subject))
           })
 
 #' Build composite motif based on two existing motifs with specified configurations
