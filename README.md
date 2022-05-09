@@ -6,7 +6,7 @@ You can pull and install TFCookbook package through R command:
 `remotes::install_github("zeropin/TFCookbook")`
 
 ### Acknowledgement:
-Some function of this package, such as matchPEM, is derived and modified from other packages motifmatchr and MOODS. I want to thank their generous sharing of the source codes and permission for reuse.
+Some function of this package, such as matchPEM, is derived and modified from other packages [motifmatchr](https://github.com/GreenleafLab/motifmatchr) and [MOODS](https://github.com/jhkorhonen/MOODS). I want to thank their generous sharing of the source codes and permission for reuse.
 
 Please do not hesitate to contact me if you have any issue.
 
