@@ -59,10 +59,11 @@ SeqToMethylByte <- function(sequences, encoding = "(3+2)L+1"){
 #' Convert energy matrix to energy model coefficients
 #' Encoding scheme: 3L+1
 #' @param PEM
-#' @return energy model coefficients
+#' @return 3L+1 energy model coefficients
 #' @examples
-#' toCoeffs("GTAC")
-toCoeffs <- function(PEM) {
+#' as.Coefficients(PEM)
+as.Coefficients <- function(PEM) {
+  PEM = .validate_PEM_input(PEM)
   coeff <- array(0L, dim = 3 * ncol(PEM))
   names(coeff) <- paste0(rep(1:ncol(PEM), each = 3), c("CG", "CA", "CT"))
 
@@ -100,7 +101,12 @@ kmer <- function(k){
 #' @examples
 #' selectVariants(data, "GTACGAC", maxMismatches=1)
 selectVariants <- function(data, reference, maxMismatches = 1) {
-  return(dplyr::filter(data, countMismatch(Sequence, reference) <= maxMismatches))
+  if(!missing(data))
+    return(dplyr::filter(data, countMismatch(Sequence, reference) <= maxMismatches))
+  else{
+    sequences = kmer(nchar(reference))
+    return(sequences[countMismatch(sequences, reference) <= maxMismatches])
+  }
 }
 
 #' Count the number of mismatches of sequence(s) to some reference site

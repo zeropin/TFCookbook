@@ -96,10 +96,10 @@ setMethod("predictEnergy", signature(sequences = "character",
             purrr::map_dbl(sequences, function(seq){
               bases = strsplit(seq, "")[[1]][1:num]
               
-              return(sum(model['A', which(bases=="A")])+
-                     sum(model['C', which(bases=="C")])+
-                     sum(model['T', which(bases=="T")])+
-                     sum(model['G', which(bases=="G")]))
+              return(sum(model['A', which(bases=="A")], na.rm = TRUE)+
+                     sum(model['C', which(bases=="C")], na.rm = TRUE)+
+                     sum(model['T', which(bases=="T")], na.rm = TRUE)+
+                     sum(model['G', which(bases=="G")], na.rm = TRUE))
               })
       
           })

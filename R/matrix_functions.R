@@ -7,8 +7,12 @@
 #' getEnergyMatrix(model)
 getEnergyMatrix <- function(model) {
   coeff <- model$coefficients
-  num <- (length(coeff) - 1) / 3
-  num <- model$seqLength
+
+  if(is.null(model$seqLength))
+    num <- (length(coeff) - 1) / 3
+  else
+    num <- model$seqLength
+  
   PEM <- matrix(nrow = 4, ncol = num, dimnames = list(c("A", "C", "G", "T")))
     
   for (i in 1:num) {
@@ -107,6 +111,7 @@ setGeneric("as.PEM",
 
 #' @describeIn as.PEM PFM
 #' @export
+#' @example as.PEM(PFMatrix)
 setMethod("as.PEM",
           signature(subject = "matrix"),
           function(subject) {
@@ -132,6 +137,7 @@ setMethod("as.PEM",
 
 #' @describeIn as.PEM energy model
 #' @export
+#' @example as.PEM(model)
 setMethod("as.PEM",
           signature(subject = "lm"),
           function(subject) {

@@ -3,8 +3,15 @@
 setGeneric("matchPEM",
            function(PEM, subject, ...) standardGeneric("matchPEM"))
 
+#' find binding sites within some GenomicRanges or DNA sequences that match some PEM
+#' 
 #' @describeIn matchPEM matrix/GenomicRanges
 #' @export
+#' @param PEM a PEM matrix
+#' @param subject a GenomicRanges
+#' @param genome the genome name, e.., hg38, mm10, etc
+#' @param E.cutoff the threshold to select hit
+#' @example matchPEM(PEM = some.PEM, subject = some.GRanges, genome = "hg38", E.cutoff = -3)
 setMethod("matchPEM", signature(PEM     = "matrix",
                                 subject = "GenomicRanges"),
           function(PEM,
@@ -18,7 +25,6 @@ setMethod("matchPEM", signature(PEM     = "matrix",
             seqs <- getSeq(x = genome, names = subject, as.character = TRUE)
             
             w <- 7
-              
             
             tmp_out <- .get_motif_positions(list(-PEM), seqs, nuc_freqs = rep(0.25, 4), -E.cutoff, w)
             
@@ -42,6 +48,10 @@ setMethod("matchPEM", signature(PEM     = "matrix",
 
 #' @describeIn matchPEM matrix/character
 #' @export
+#' @param PEM a PEM matrix
+#' @param subject a list of DNA sequences
+#' @param E.cutoff the threshold to select hit
+#' @example matchPEM(PEM = somePEM, subject = sequences, E.cutoff = -3)
 setMethod("matchPEM", signature(PEM     = "matrix",
                                 subject = "character"),
           function(PEM,
@@ -94,13 +104,13 @@ setMethod("matchSite", signature(site   = "character",
           function(site,
                    subject,
                    genome,
-                   mismatch = 0){
+                   max.mismatch = 0){
             
               PEM<-addAnchorMatrix(PEM = NULL, anchor = site, height = 1)
               out <- matchPEM(PEM,
                               subject = subject,
                               genome  = genome,
-                              E.cutoff = -nchar(site)+mismatch+0.1)
+                              E.cutoff = -nchar(site)+max.mismatch+0.1)
     
               out$predicted.Energy = NULL
               return(out)
@@ -114,12 +124,12 @@ setMethod("matchSite", signature(site   = "character",
                                  subject= "DNAStringSet"),
           function(site,
                    subject,
-                   mismatch = 0){
+                   max.mismatch = 0){
             
               PEM<-addAnchorMatrix(PEM = NULL, anchor = site, height = 1)
               out <- matchPEM(PEM,
                               subject = subject,
-                              E.cutoff = -nchar(site)+mismatch+0.1)
+                              E.cutoff = -nchar(site)+max.mismatch+0.1)
           
               out$predicted.Energy = NULL
               return(out)
@@ -134,12 +144,12 @@ setMethod("matchSite", signature(site   = "character",
                                  subject= "character"),
           function(site,
                    subject,
-                   mismatch = 0){
+                   max.mismatch = 0){
             
               PEM<-addAnchorMatrix(PEM = NULL, anchor = site, height = 1)
               out<-matchPEM(PEM,
                             subject = subject,
-                            E.cutoff = -nchar(site)+mismatch+0.1)
+                            E.cutoff = -nchar(site)+max.mismatch+0.1)
           
               out$predicted.Energy = NULL
               return(out)
