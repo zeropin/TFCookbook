@@ -2,26 +2,47 @@
 #' 
 #' @param data Data frame containing at least two variables -- Sequence and Energy
 #' @param encoding The encoding scheme used to build model, including 3L+1, 4L+1, 5L+1.
+#' @param type The encoding scheme used to build model, including 3L+1, 4L+1, 5L+1.
 #' @return Linear model containing position-based energy coefficients, e.g., 1CA, 1CG, 1CT, 2CA, etc.
 #' @examples
 #' buildEnergyModel(data)
-buildEnergyModel <- function(data, encoding = "3L+1") {
+buildEnergyModel <- function(data, encoding = "3L+1", method = c("linear", "ridge", "lasso"), lambda) {
   num <- nchar(data$Sequence[1])
 
   if(encoding == "3L+1") scheme = paste0(rep(1:num, each = 3), c("CG", "CA", "CT"))
   else if(encoding == "5L+1") scheme = paste0(rep(1:num, each = 5), c("CG", "CA", "CT", "CM", "GW"))
   else if(encoding == "4L+1") scheme = paste0(rep(1:num, each = 4), c("CG", "CA", "CT", "MW"))
   
-  model <- data %>%
+  processed.data <- data %>%
     dplyr::mutate(ByteCode = SeqToByte(Sequence, encoding)) %>%
     dplyr::select(Energy, ByteCode) %>%
     tidyr::separate(ByteCode,
       into = scheme,
       convert = TRUE
-    ) %>%
-    lm(Energy ~ . - Energy, data = .)
+    )
+  
+  
+  if(method == "linear") 
+    model = lm(Energy ~ . - Energy, data = processed.data)
+  else if(method %in%  c("ridge", "lasso")){
+    if(missing(lambda)){
+      lambda = glmnet::cv.glmnet(x = processed.data[,-1] %>% as.matrix,
+                                 y = processed.data$Energy,
+                                 standardize = FALSE,
+                                 family = 'gaussian', alpha = ifelse(method=="ridge", 0, 1),
+                                 lambda.min.ratio = 1e-6)$lambda.min
+      print(paste0("Optimal lambda by CV is", lambda))
+    }
+    
+    model = glmnet::glmnet(x = processed.data[,-1] %>% as.matrix,
+                           y = processed.data$Energy,
+                           standardize = FALSE,
+                           family = 'gaussian', alpha = ifelse(method=="ridge", 0, 1),
+                           lambda = lambda)
+  }
   
   model$seqLength <- num
+  model$nobs <- nrow(processed.data)
   return(model)
 }
 

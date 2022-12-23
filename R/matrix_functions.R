@@ -1,31 +1,3 @@
-#' Derive energy matrix from position-based energy model including parameters like 1CG, 1CT, 2CA, 3CG, etc
-#' 
-#' @param model position-based energy model, returned by buildEnergymodel function.
-#' @return Energy matrix
-#' @aliases toPEM
-#' @examples
-#' getEnergyMatrix(model)
-getEnergyMatrix <- function(model) {
-  coeff <- model$coefficients
-
-  if(is.null(model$seqLength))
-    num <- (length(coeff) - 1) / 3
-  else
-    num <- model$seqLength
-  
-  PEM <- matrix(nrow = 4, ncol = num, dimnames = list(c("A", "C", "G", "T")))
-    
-  for (i in 1:num) {
-    PEM["C", i] <- 0
-    PEM["G", i] <- coeff[paste0("`", i, "CG`")]
-    PEM["A", i] <- coeff[paste0("`", i, "CA`")]
-    PEM["T", i] <- coeff[paste0("`", i, "CT`")]
-    
-    PEM[, i] <- PEM[, i] - 0.25 * sum(PEM[, i])
-  }
-  
-  return(PEM)
-}
 
 
 addMethylMatrix <- function(PEM, MethylModel, encoding = "(3+2)L+1"){
@@ -93,6 +65,7 @@ addAnchorMatrix <- function(PEM = NULL, anchor, position=1, height=0.2) {
 #' @examples
 #' reverseComplement(PEM)
 reverseComplement <- function(PEM){
+  PEM = .validate_PEM_input(PEM)
   reverseMatrix <- matrix(0L,
                           nrow = 4, ncol = dim(PEM)[2], byrow = TRUE,
                           dimnames = list(c("A", "C", "G", "T")))
@@ -141,8 +114,50 @@ setMethod("as.PEM",
 setMethod("as.PEM",
           signature(subject = "lm"),
           function(subject) {
-            return(getEnergyMatrix(subject))
+            coeff <- subject$coefficients
+
+            if(is.null(subject$seqLength))
+                num <- (length(coeff) - 1) / 3
+            else
+                num <- subject$seqLength
+  
+            PEM <- matrix(nrow = 4, ncol = num, dimnames = list(c("A", "C", "G", "T")))
+    
+            for (i in 1:num) {
+                PEM["C", i] <- 0
+                PEM["G", i] <- coeff[paste0("`", i, "CG`")]
+                PEM["A", i] <- coeff[paste0("`", i, "CA`")]
+                PEM["T", i] <- coeff[paste0("`", i, "CT`")]
+    
+                PEM[, i] <- PEM[, i] - 0.25 * sum(PEM[, i])
+            }
+  
+            return(PEM)
           })
+
+#' @describeIn as.PEM energy model
+#' @export
+#' @example as.PEM(model)
+setMethod("as.PEM",
+          signature(subject = "elnet"),
+          function(subject) {
+            PEM <- matrix(nrow = 4, ncol = subject$seqLength, dimnames = list(c("A", "C", "G", "T")))
+            
+            for (i in 1:subject$seqLength) {
+              PEM["C", i] <- 0
+              PEM["G", i] <- subject$beta[paste0(i, "CG"),1]
+              PEM["A", i] <- subject$beta[paste0(i, "CA"),1]
+              PEM["T", i] <- subject$beta[paste0(i, "CT"),1]
+              
+              PEM[, i] <- PEM[, i] - 0.25 * sum(PEM[, i])
+            }
+            
+            return(PEM)
+          })
+
+#' Derive energy matrix from position-based energy model including parameters like 1CG, 1CT, 2CA, 3CG, etc
+getEnergyMatrix <- as.PEM
+
 
 #' Build composite motif based on two existing motifs with specified configurations
 #' 

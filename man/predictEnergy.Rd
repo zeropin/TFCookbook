@@ -25,11 +25,11 @@ Predict the binding energy of input sequences based on energy model
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{sequences = character,model = lm}: Sequences/EnergyModel
+\item \code{predictEnergy(sequences = character, model = lm)}: Sequences/EnergyModel
 
-\item \code{sequences = character,model = matrix}: Sequences/PEM
+\item \code{predictEnergy(sequences = character, model = matrix)}: Sequences/PEM
+
 }}
-
 \examples{
 predictEnergy(sequences, model)
 }

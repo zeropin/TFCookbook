@@ -26,10 +26,10 @@ find binding sites within some GenomicRanges or DNA sequences that match some PE
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{PEM = matrix,subject = GenomicRanges}: matrix/GenomicRanges
+\item \code{matchPEM(PEM = matrix, subject = GenomicRanges)}: matrix/GenomicRanges
 
-\item \code{PEM = matrix,subject = character}: matrix/character
+\item \code{matchPEM(PEM = matrix, subject = character)}: matrix/character
 
-\item \code{PEM = matrix,subject = DNAStringSet}: matrix/DNAStringSet
+\item \code{matchPEM(PEM = matrix, subject = DNAStringSet)}: matrix/DNAStringSet
+
 }}
-

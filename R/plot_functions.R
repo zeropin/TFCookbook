@@ -6,6 +6,7 @@
 #' @examples
 #' plotEnergyLogo(PEM)
 plotEnergyLogo <- function(PEM, col_scheme = c("default", "classic")) {
+  PEM = .validate_PEM_input(PEM)
   if(col_scheme == "classic")
     col_scheme = ggseqlogo::make_col_scheme(chars=c('A', 'C', 'G', 'T',
                                                     'M', 'W', 'N'),

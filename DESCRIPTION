@@ -16,6 +16,7 @@ Imports:
     GenomicRanges
 Suggests:
     ggplot2,
-    ggseqlogo
+    ggseqlogo,
+    glmnet
 LinkingTo: Rcpp, RcppArmadillo
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
