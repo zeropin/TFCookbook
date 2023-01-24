@@ -1,4 +1,4 @@
-# Transcription Factor Cookbook
+# Transcription Factors Cookbook
 
 ![](CTCF-recognition-model.gif)
 
