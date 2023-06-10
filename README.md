@@ -1,6 +1,4 @@
-# Transcription Factor Cookbook
-
-![](CTCF-recognition-model.gif)
+# Transcription Factors Cookbook
 
 TFCookbook is a R package used to model and analyze protein-DNA interactions data, and predict specific *in vivo* binding sites in principled way. It is currently developed and maintained by Zheng Zuo. The acompanying paper to describe the modeling principles behind this package can be accessed through (https://www.lidsen.com/journals/genetics/genetics-05-03-134#).
 
@@ -17,4 +15,7 @@ Some function of this package, such as matchPEM, is derived and modified from ot
 Please do not hesitate to contact me if you have any issue.
 
 Zheng Zuo
+
 zeropin@live.cn
+
+![](CTCF-recognition-model.gif)
