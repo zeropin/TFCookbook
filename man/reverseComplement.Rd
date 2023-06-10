@@ -7,7 +7,7 @@
 reverseComplement(PEM)
 }
 \arguments{
-\item{matrix}{position energy matrix}
+\item{PEM}{position energy matrix}
 }
 \value{
 reversed energy matrix

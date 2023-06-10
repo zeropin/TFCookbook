@@ -1,3 +1,43 @@
+#' Get DNA sequences from UCSC genome database directly through REST API
+#' 
+#' @param genome genome assembly name, hg38, mm10, panPan3, etc
+#' @param names either a GRanges object or a character of the chromosome name
+#' @param start,end Vector of integers (eventually with NAs) specifying the locations of the subsequences to extract
+#' @param strand Vector of integers (eventually with NAs) specifying the locations of the subsequences to extract
+#' @examples
+#' getSeqFromUCSC("hg38", "chr1", start=55, end=65, strand="-")
+#' 
+#' ranges = GenomicRanges::GRanges(seqnames = "chrM", ranges = IRanges::IRanges(15466, 15555), strand="+")
+#' getSeqFromUCSC("panPan3", names=ranges)
+
+getSeqFromUCSC <- function(genome, names, start=NA, end=NA, strand="+"){
+  if(is.character(names)){
+    response = httr::GET(url=paste0("https://api.genome.ucsc.edu/getData/sequence?genome=",genome,
+                         ";chrom=",names,
+                         ";start=",start,
+                         ";end=",  end))
+    
+    httr::warn_for_status(response)
+    
+    if (httr::status_code(response)==200){
+      message(paste0(names," ",start, " ", end, " retrived."))
+      return(ifelse(strand=="-",
+                    as.character(Biostrings::reverseComplement(Biostrings::DNAString(httr::content(response)$dna))),
+                    httr::content(response)$dna
+                    ))}
+    else
+      return(NA)
+  }
+  else if(class(names)=="GRanges"){
+    purrr::pmap_chr(as.data.frame(names),
+                    function(seqnames, start, end, strand, ...)
+                      getSeqFromUCSC(genome=genome, names = as.character(seqnames), start=start, end=end, strand=strand)) %>%
+      return()
+  }
+}
+
+
+
 #' Convert DNA sequences to binary code based on various encoding schemes
 #' 
 #' @param sequences List of sequences.

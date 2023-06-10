@@ -8,15 +8,14 @@ Description: This package is currently developed and maintained by Zheng Zuo, an
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports:
-    dplyr,
-    purrr,
-    tidyr,
+Depends:
+    dplyr, purrr, tidyr,
     Biostrings, BSgenome,
     GenomicRanges
 Suggests:
     ggplot2,
     ggseqlogo,
-    glmnet
+    glmnet,
+    httr
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 7.2.1

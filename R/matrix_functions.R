@@ -60,7 +60,7 @@ addAnchorMatrix <- function(PEM = NULL, anchor, position=1, height=0.2) {
 
 #' Reverse some existing position energy matrix
 #' 
-#' @param matrix position energy matrix
+#' @param PEM position energy matrix
 #' @return reversed energy matrix
 #' @examples
 #' reverseComplement(PEM)
